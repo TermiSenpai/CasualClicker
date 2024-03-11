@@ -514,10 +514,7 @@ MonoBehaviour:
   _androidGameId: 5570283
   _iOSGameId: 5570282
   _testMode: 1
-  _bannerPosition: 1
-  _androidRewardAdUnitId: Rewarded_Android
-  _iOSRewardAdUnitId: Rewarded_iOS
-  text: {fileID: 504822261}
+  _bannerPosition: 4
 --- !u!4 &525317355
 Transform:
   m_ObjectHideFlags: 0
@@ -544,6 +541,7 @@ GameObject:
   - component: {fileID: 916676588}
   - component: {fileID: 916676587}
   - component: {fileID: 916676589}
+  - component: {fileID: 916676590}
   m_Layer: 0
   m_Name: CatgirlTesting
   m_TagString: Untagged
@@ -663,6 +661,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 3.786354, y: 7.724171}
   m_EdgeRadius: 0
+--- !u!114 &916676590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 916676586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bfe8cb556866914fb002fae2d7662fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1062225406
 GameObject:
   m_ObjectHideFlags: 0
@@ -726,6 +736,52 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1286265601
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1286265603}
+  - component: {fileID: 1286265602}
+  m_Layer: 0
+  m_Name: ClickerManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1286265602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1286265601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b5bf8b48c763714a9d2a5ad9511db8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clicks: 0
+  multiplier: 1
+--- !u!4 &1286265603
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1286265601}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 230.7575, y: 427.76047, z: -1.3466988}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -842,3 +898,4 @@ SceneRoots:
   - {fileID: 2089473604}
   - {fileID: 1062225409}
   - {fileID: 525317355}
+  - {fileID: 1286265603}
