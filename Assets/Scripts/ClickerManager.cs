@@ -4,21 +4,39 @@ using UnityEngine;
 public class ClickerManager : MonoBehaviour
 {
     public static ClickerManager instance;
-    [SerializeField] int clicks;
+    public delegate void ValueChangedDelegate(int newValue);
+    public static event ValueChangedDelegate OnValueChanged;
+
+
     public int multiplier;
+    [SerializeField] int clicks;
+    public int Clicks
+    {
+        get => clicks;
+        set
+        {
+            clicks = value;
+            OnValueChanged?.Invoke(clicks);
+        }
+    }
 
     private void Awake()
     {
-        instance = this;
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
+
+        DontDestroyOnLoad(gameObject);
     }
     public void ClickImage()
     {
-        clicks += 1 * multiplier;
+        Clicks += 1 * multiplier;
     }
 
-    public IEnumerator ClicksMultiplier(int value)
+    public IEnumerator ClicksMultiplier(int newMultiplier)
     {
-        multiplier = value;
+        multiplier = newMultiplier;
         yield return new WaitForSeconds(30f);
         multiplier = 1;
     }
