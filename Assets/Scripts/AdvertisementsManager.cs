@@ -1,33 +1,37 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Advertisements;
 
-public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener, IUnityAdsShowListener, IUnityAdsLoadListener
+public class AdvertisementsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnityAdsShowListener, IUnityAdsLoadListener
 {
+    public static AdvertisementsManager Instance;
     [SerializeField] string _androidGameId;
     [SerializeField] string _iOSGameId;
     [SerializeField] bool _testMode = true;
     private string _gameId;
-
-    [SerializeField] string _androidAdUnitId = "Rewarded_Android";
-    [SerializeField] string _iOSAdUnitId = "Rewarded_iOS";
-    string _adUnitId = null; // This will remain null for unsupported platforms
+    [SerializeField] BannerPosition _bannerPosition = BannerPosition.BOTTOM_CENTER;
+    string _adUnitId = "Rewarded_Android"; // This will remain null for unsupported platforms
 
     void Awake()
     {
         InitializeAds();
     }
+    private void Start()
+    {
+        // Set the banner position:
+        Advertisement.Banner.SetPosition(_bannerPosition);
+    }
 
+    #region Initialize
     public void InitializeAds()
     {
-#if UNITY_IOS
-            _gameId = _iOSGameId;
-            _adUnitId = _IOSAdUnitId;
-#elif UNITY_ANDROID
+#if UNITY_ANDROID
+        _testMode = false;
         _gameId = _androidGameId;
-        _adUnitId = _androidAdUnitId;
 #elif UNITY_EDITOR
-            _gameId = _androidGameId; //Only for testing the functionality in the Editor
+            _testMode = true;
+            _gameId = _androidGameId;
 #endif
         if (!Advertisement.isInitialized && Advertisement.isSupported)
         {
@@ -36,21 +40,23 @@ public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener, IU
 
     }
 
-
     public void OnInitializationComplete()
     {
         Debug.Log("Unity Ads initialization complete.");
-        LoadAd();        
+        LoadBanner();
     }
 
     public void OnInitializationFailed(UnityAdsInitializationError error, string message)
     {
         Debug.Log(message: $"Unity Ads Initialization Failed: {error} - {message}");
     }
+    #endregion
+
+    #region Load
     // Load content to the Ad Unit:
     public void LoadAd()
     {
-        // IMPORTANT! Only load content AFTER initialization (in this example, initialization is handled in a different script).
+        // IMPORTANT! Only load content AFTER initialization
         Debug.Log("Loading Ad: " + _adUnitId);
         Advertisement.Load(_adUnitId, this);
     }
@@ -66,6 +72,13 @@ public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener, IU
         }
     }
 
+    public void OnUnityAdsFailedToLoad(string adUnitId, UnityAdsLoadError error, string message)
+    {
+        Debug.Log("error");
+    }
+    #endregion
+
+    #region Show
     // Show the loaded content in the Ad Unit:
     public void ShowAd()
     {
@@ -91,11 +104,60 @@ public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener, IU
 
     public void OnUnityAdsShowComplete(string adUnitId, UnityAdsShowCompletionState showCompletionState)
     {
-        Debug.Log("showed ad: "+adUnitId);
+        Debug.Log("showed ad: " + adUnitId);
     }
 
-    public void OnUnityAdsFailedToLoad(string adUnitId, UnityAdsLoadError error, string message)
+    #endregion
+
+    #region Banner
+
+    // Implement a method to call when the Load Banner button is clicked:
+    public void LoadBanner()
     {
-        throw new System.NotImplementedException();
+        // Set up options to notify the SDK of load events:
+        BannerLoadOptions options = new BannerLoadOptions
+        {
+            loadCallback = OnBannerLoaded,
+            errorCallback = OnBannerError
+        };
+
+        // Load the Ad Unit with banner content:
+        Advertisement.Banner.Load(_adUnitId, options);
+    }
+    // Implement code to execute when the load errorCallback event triggers:
+    void OnBannerError(string message)
+    {
+        Debug.Log($"Banner Error: {message}");
+        // Optionally execute additional code, such as attempting to load another ad.
+    }
+    // Implement code to execute when the loadCallback event triggers:
+    void OnBannerLoaded()
+    {
+        Debug.Log("Banner loaded");
+        ShowBannerAd();
+
+    }
+    // Implement a method to call when the Show Banner button is clicked:
+    void ShowBannerAd()
+    {
+        // Set up options to notify the SDK of show events:
+        BannerOptions options = new BannerOptions
+        {
+            clickCallback = OnBannerClicked,
+            hideCallback = OnBannerHidden,
+            showCallback = OnBannerShown
+        };
+
+        // Show the loaded Banner Ad Unit:
+        Advertisement.Banner.Show(_adUnitId, options);
+    }
+    void OnBannerClicked() { }
+    void OnBannerShown() { }
+    void OnBannerHidden() { }
+    #endregion
+
+    public void BTN()
+    {
+        LoadAd();
     }
 }
