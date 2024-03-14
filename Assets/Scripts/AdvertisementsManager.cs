@@ -15,7 +15,7 @@ public class AdvertisementsManager : MonoBehaviour, IUnityAdsInitializationListe
     [SerializeField] bool _testMode = true;
     private string _gameId;
     [SerializeField] BannerPosition _bannerPosition = BannerPosition.BOTTOM_CENTER;
-    string _adUnitId = "Rewarded_Android"; // This will remain null for unsupported platforms
+    readonly string _adUnitId = "Rewarded_Android"; // This will remain null for unsupported platforms
 
     void Awake()
     {
@@ -126,11 +126,12 @@ public class AdvertisementsManager : MonoBehaviour, IUnityAdsInitializationListe
     public void LoadBanner()
     {
         // Set up options to notify the SDK of load events:
-        BannerLoadOptions options = new BannerLoadOptions
+        BannerLoadOptions bannerLoadOptions = new()
         {
             loadCallback = OnBannerLoaded,
             errorCallback = OnBannerError
         };
+        BannerLoadOptions options = bannerLoadOptions;
 
         // Load the Ad Unit with banner content:
         Advertisement.Banner.Load(_adUnitId, options);
@@ -152,7 +153,7 @@ public class AdvertisementsManager : MonoBehaviour, IUnityAdsInitializationListe
     void ShowBannerAd()
     {
         // Set up options to notify the SDK of show events:
-        BannerOptions options = new BannerOptions
+        BannerOptions options = new()
         {
             clickCallback = OnBannerClicked,
             hideCallback = OnBannerHidden,
