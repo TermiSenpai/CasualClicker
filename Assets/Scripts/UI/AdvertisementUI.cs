@@ -46,7 +46,7 @@ public class AdvertisementUI : MonoBehaviour
     IEnumerator ShowReward()
     {
         adShowReward.SetActive(true);
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2.25f);
         adShowReward.SetActive(false);
 
     }
