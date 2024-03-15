@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ClickerManager : MonoBehaviour
 {
-    public static ClickerManager instance;
+    public static ClickerManager Instance;
     public delegate void ValueChangedDelegate(int newValue);
     public static event ValueChangedDelegate OnValueChanged;
 
@@ -22,9 +22,9 @@ public class ClickerManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null)
-            instance = this;
-        else if (instance != this)
+        if (Instance == null)
+            Instance = this;
+        else if (Instance != this)
             Destroy(gameObject);
 
         DontDestroyOnLoad(gameObject);

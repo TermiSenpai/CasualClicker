@@ -1,20 +1,31 @@
-using System.Collections;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Advertisements;
 
 public class AdvertisementsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnityAdsShowListener, IUnityAdsLoadListener
 {
+    public delegate void AdvertisementUIDelegate();
+    public static event AdvertisementUIDelegate OnStartLoading;
+    public static event AdvertisementUIDelegate OnFinishLoading;
+    public static event AdvertisementUIDelegate OnFailLoading;
+    public static event AdvertisementUIDelegate OnRewardComplete;
+
     public static AdvertisementsManager Instance;
     [SerializeField] string _androidGameId;
     [SerializeField] string _iOSGameId;
     [SerializeField] bool _testMode = true;
     private string _gameId;
     [SerializeField] BannerPosition _bannerPosition = BannerPosition.BOTTOM_CENTER;
-    string _adUnitId = "Rewarded_Android"; // This will remain null for unsupported platforms
+    readonly string _adUnitId = "Rewarded_Android"; // This will remain null for unsupported platforms
 
     void Awake()
     {
+        if (Instance == null)
+            Instance = this;
+        else if (Instance != this)
+            Destroy(gameObject);
+
+        DontDestroyOnLoad(gameObject);
+
         InitializeAds();
     }
     private void Start()
@@ -57,15 +68,14 @@ public class AdvertisementsManager : MonoBehaviour, IUnityAdsInitializationListe
     public void LoadAd()
     {
         // IMPORTANT! Only load content AFTER initialization
-        Debug.Log("Loading Ad: " + _adUnitId);
         Advertisement.Load(_adUnitId, this);
+        OnStartLoading?.Invoke();
     }
 
     // If the ad successfully loads, add a listener to the button and enable it:
     public void OnUnityAdsAdLoaded(string adUnitId)
     {
-        Debug.Log("Ad Loaded: " + adUnitId);
-
+        OnFinishLoading?.Invoke();
         if (adUnitId.Equals(_adUnitId))
         {
             ShowAd();
@@ -74,7 +84,7 @@ public class AdvertisementsManager : MonoBehaviour, IUnityAdsInitializationListe
 
     public void OnUnityAdsFailedToLoad(string adUnitId, UnityAdsLoadError error, string message)
     {
-        Debug.Log("error");
+        OnFailLoading?.Invoke();
     }
     #endregion
 
@@ -104,8 +114,8 @@ public class AdvertisementsManager : MonoBehaviour, IUnityAdsInitializationListe
 
     public void OnUnityAdsShowComplete(string adUnitId, UnityAdsShowCompletionState showCompletionState)
     {
-        StartCoroutine(ClickerManager.instance.ClicksMultiplier(2));
-        Debug.Log("showed ad: " + adUnitId);
+        StartCoroutine(ClickerManager.Instance.ClicksMultiplier(2));
+        OnRewardComplete?.Invoke();
     }
 
     #endregion
@@ -116,11 +126,12 @@ public class AdvertisementsManager : MonoBehaviour, IUnityAdsInitializationListe
     public void LoadBanner()
     {
         // Set up options to notify the SDK of load events:
-        BannerLoadOptions options = new BannerLoadOptions
+        BannerLoadOptions bannerLoadOptions = new()
         {
             loadCallback = OnBannerLoaded,
             errorCallback = OnBannerError
         };
+        BannerLoadOptions options = bannerLoadOptions;
 
         // Load the Ad Unit with banner content:
         Advertisement.Banner.Load(_adUnitId, options);
@@ -142,7 +153,7 @@ public class AdvertisementsManager : MonoBehaviour, IUnityAdsInitializationListe
     void ShowBannerAd()
     {
         // Set up options to notify the SDK of show events:
-        BannerOptions options = new BannerOptions
+        BannerOptions options = new()
         {
             clickCallback = OnBannerClicked,
             hideCallback = OnBannerHidden,
@@ -157,8 +168,4 @@ public class AdvertisementsManager : MonoBehaviour, IUnityAdsInitializationListe
     void OnBannerHidden() { }
     #endregion
 
-    public void BTN()
-    {
-        LoadAd();
-    }
 }
