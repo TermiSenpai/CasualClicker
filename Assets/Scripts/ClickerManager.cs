@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ClickerManager : MonoBehaviour
 {
-    public static ClickerManager Instance;
+    //public static ClickerManager Instance;
     public delegate void ValueChangedDelegate(int newValue);
     public static event ValueChangedDelegate OnValueChanged;
 
@@ -20,14 +20,29 @@ public class ClickerManager : MonoBehaviour
         }
     }
 
-    private void Awake()
-    {
-        if (Instance == null)
-            Instance = this;
-        else if (Instance != this)
-            Destroy(gameObject);
+    //private void Awake()
+    //{
+    //    if (Instance == null)
+    //        Instance = this;
+    //    else if (Instance != this)
+    //        Destroy(gameObject);
 
-        DontDestroyOnLoad(gameObject);
+    //    DontDestroyOnLoad(gameObject);
+    //}
+
+    private void OnEnable()
+    {
+        Character.OnCharacterClickRelease += OncharacterClick;
+    }
+
+    private void OnDisable()
+    {
+        Character.OnCharacterClickRelease -= OncharacterClick;        
+    }
+
+    void OncharacterClick()
+    {
+        ClickImage();
     }
     public void ClickImage()
     {

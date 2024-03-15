@@ -114,7 +114,7 @@ public class AdvertisementsManager : MonoBehaviour, IUnityAdsInitializationListe
 
     public void OnUnityAdsShowComplete(string adUnitId, UnityAdsShowCompletionState showCompletionState)
     {
-        StartCoroutine(ClickerManager.Instance.ClicksMultiplier(2));
+        //StartCoroutine(ClickerManager.Instance.ClicksMultiplier(2));
         OnRewardComplete?.Invoke();
     }
 
